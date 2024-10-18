@@ -122,9 +122,16 @@ private extension EditProfileViewController {
     
     func bindViewModel() {
         self.profileViewModel.onReissueSuccess.bind { [weak self] onSuccess in
-            guard let onSuccess else { return }
+            guard let onSuccess, let type = self?.profileViewModel.type.value else { return }
             if onSuccess {
-                self?.profileViewModel.patchEditProfile()
+                switch type {
+                case .getDoubleCheck:
+                    self?.profileViewModel.getDoubleCheck()
+                case .postSignUp:
+                    self?.profileViewModel.patchEditProfile()
+                default:
+                    self?.navigationController?.pushViewController(SplashViewController(splashViewModel: SplashViewModel()), animated: false)
+                }
             } else {
                 self?.navigationController?.pushViewController(SplashViewController(splashViewModel: SplashViewModel()), animated: false)
             }
